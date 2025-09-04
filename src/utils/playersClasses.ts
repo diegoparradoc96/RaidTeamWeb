@@ -1,7 +1,7 @@
 /* types */
-import type { IPlayerClass } from "../types";
+import type { IPlayerClasses } from "../types";
 
-export const warriorClass: IPlayerClass = {
+export const warriorClasses: IPlayerClasses = {
   name: "Warrior",
   spec: [
     {
@@ -18,7 +18,7 @@ export const warriorClass: IPlayerClass = {
     },
   ],
 };
-export const mageClass: IPlayerClass = {
+export const mageClasses: IPlayerClasses = {
   name: "Mage",
   spec: [
     {
@@ -35,7 +35,7 @@ export const mageClass: IPlayerClass = {
     },
   ],
 };
-export const rogueClass: IPlayerClass = {
+export const rogueClasses: IPlayerClasses = {
   name: "Rogue",
   spec: [
     {
@@ -52,7 +52,7 @@ export const rogueClass: IPlayerClass = {
     },
   ],
 };
-export const priestClass: IPlayerClass = {
+export const priestClasses: IPlayerClasses = {
   name: "Priest",
   spec: [
     {
@@ -69,7 +69,7 @@ export const priestClass: IPlayerClass = {
     },
   ],
 };
-export const hunterClass: IPlayerClass = {
+export const hunterClasses: IPlayerClasses = {
   name: "Hunter",
   spec: [
     {
@@ -86,7 +86,7 @@ export const hunterClass: IPlayerClass = {
     },
   ],
 };
-export const shamanClass: IPlayerClass = {
+export const shamanClasses: IPlayerClasses = {
   name: "Shaman",
   spec: [
     {
@@ -103,7 +103,7 @@ export const shamanClass: IPlayerClass = {
     },
   ],
 };
-export const paladinClass: IPlayerClass = {
+export const paladinClasses: IPlayerClasses = {
   name: "Paladin",
   spec: [
     {
@@ -120,7 +120,7 @@ export const paladinClass: IPlayerClass = {
     },
   ],
 };
-export const warlockClass: IPlayerClass = {
+export const warlockClasses: IPlayerClasses = {
   name: "Warlock",
   spec: [
     {
@@ -137,7 +137,7 @@ export const warlockClass: IPlayerClass = {
     },
   ],
 };
-export const druidClass: IPlayerClass = {
+export const druidClasses: IPlayerClasses = {
   name: "Druid",
   spec: [
     {
