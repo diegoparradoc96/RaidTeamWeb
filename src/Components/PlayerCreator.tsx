@@ -3,37 +3,44 @@ import { Image } from "@chakra-ui/react";
 /* chakra */
 import { Button, CloseButton, Dialog, Portal, Input } from "@chakra-ui/react";
 /* types */
-import type { IPlayerClass } from "../types";
+import type { IPlayerClasses } from "../types";
 /* utils */
 import {
-  warriorClass,
-  paladinClass,
-  mageClass,
-  priestClass,
-  rogueClass,
-  shamanClass,
-  warlockClass,
-  druidClass,
-  hunterClass,
+  warriorClasses,
+  paladinClasses,
+  mageClasses,
+  priestClasses,
+  rogueClasses,
+  shamanClasses,
+  warlockClasses,
+  druidClasses,
+  hunterClasses,
 } from "../utils";
+/* context */
+import { usePlayer } from "../context";
 
-interface PlayerCreatorProps {
-  onClick: () => void;
-}
+interface PlayerCreatorProps {}
 
-const PlayerCreator: React.FC<PlayerCreatorProps> = ({ onClick }) => {
-  const [isSelected, setIsSelected] = useState(false);
+const PlayerCreator: React.FC<PlayerCreatorProps> = () => {
+  const { player, addPlayer, clearPlayer } = usePlayer();
+
+  const [playerName, setPlayerName] = useState("");
+
+  const handleCreatePlayer = () => {
+    console.log("player", player);
+    addPlayer({ name: playerName, class: player.class });
+  };
 
   const playerClassSelector = ({
-    playerClass,
+    playerClasses,
   }: {
-    playerClass: IPlayerClass;
+    playerClasses: IPlayerClasses;
   }) => {
     return (
       <>
-        <p className="text-center">{playerClass.name}</p>
+        <p className="text-center">{playerClasses.name}</p>
         <div className="flex flex-row justify-center">
-          {playerClass.spec.map((specInfo) => (
+          {playerClasses.spec.map((specInfo) => (
             <Image
               key={specInfo.name}
               src={specInfo.image}
@@ -41,14 +48,33 @@ const PlayerCreator: React.FC<PlayerCreatorProps> = ({ onClick }) => {
               boxSize="45px"
               objectFit="cover"
               cursor="pointer"
-              onClick={() => setIsSelected(!isSelected)}
-              border={isSelected ? "2px solid" : "2px solid transparent"}
-              borderColor={isSelected ? "blue.500" : "transparent"}
+              onClick={() =>
+                addPlayer({
+                  name: playerName,
+                  class: { name: playerClasses.name, spec: specInfo },
+                })
+              }
+              border={
+                player.class.name == playerClasses.name &&
+                player.class.spec.name == specInfo.name
+                  ? "2px solid"
+                  : "2px solid transparent"
+              }
+              borderColor={
+                player.class.name == playerClasses.name &&
+                player.class.spec.name == specInfo.name
+                  ? "blue.500"
+                  : "transparent"
+              }
               borderRadius="md"
               transition="all 0.2s"
               _hover={{
                 transform: "scale(1.05)",
-                borderColor: isSelected ? "blue.600" : "gray.300",
+                borderColor:
+                  player.class.name == playerClasses.name &&
+                  player.class.spec.name == specInfo.name
+                    ? "blue.600"
+                    : "gray.300",
               }}
             />
           ))}
@@ -74,34 +100,23 @@ const PlayerCreator: React.FC<PlayerCreatorProps> = ({ onClick }) => {
             <Dialog.Body>
               <div className="flex flex-row">
                 <p className="flex items-center w-2/6 mr-2">Player name:</p>
-                <Input placeholder="Enter player name" />
+                <Input
+                  placeholder="Enter player name"
+                  onChange={(e) => setPlayerName(e.target.value)}
+                />
               </div>
 
               <div className="h-5"></div>
 
               <div className="flex flex-row">
                 <div className="w-2/6">
-                  {playerClassSelector({ playerClass: warriorClass })}
+                  {playerClassSelector({ playerClasses: warriorClasses })}
                 </div>
                 <div className="w-2/6">
-                  {playerClassSelector({ playerClass: paladinClass })}
+                  {playerClassSelector({ playerClasses: paladinClasses })}
                 </div>
                 <div className="w-2/6">
-                  {playerClassSelector({ playerClass: rogueClass })}
-                </div>
-              </div>
-
-              <div className="h-2"></div>
-
-              <div className="flex flex-row">
-                <div className="w-2/6">
-                  {playerClassSelector({ playerClass: hunterClass })}
-                </div>
-                <div className="w-2/6">
-                  {playerClassSelector({ playerClass: mageClass })}
-                </div>
-                <div className="w-2/6">
-                  {playerClassSelector({ playerClass: warlockClass })}
+                  {playerClassSelector({ playerClasses: rogueClasses })}
                 </div>
               </div>
 
@@ -109,21 +124,46 @@ const PlayerCreator: React.FC<PlayerCreatorProps> = ({ onClick }) => {
 
               <div className="flex flex-row">
                 <div className="w-2/6">
-                  {playerClassSelector({ playerClass: shamanClass })}
+                  {playerClassSelector({ playerClasses: hunterClasses })}
                 </div>
                 <div className="w-2/6">
-                  {playerClassSelector({ playerClass: priestClass })}
+                  {playerClassSelector({ playerClasses: mageClasses })}
                 </div>
                 <div className="w-2/6">
-                  {playerClassSelector({ playerClass: druidClass })}
+                  {playerClassSelector({ playerClasses: warlockClasses })}
+                </div>
+              </div>
+
+              <div className="h-2"></div>
+
+              <div className="flex flex-row">
+                <div className="w-2/6">
+                  {playerClassSelector({ playerClasses: shamanClasses })}
+                </div>
+                <div className="w-2/6">
+                  {playerClassSelector({ playerClasses: priestClasses })}
+                </div>
+                <div className="w-2/6">
+                  {playerClassSelector({ playerClasses: druidClasses })}
                 </div>
               </div>
             </Dialog.Body>
             <Dialog.Footer>
               <Dialog.ActionTrigger asChild>
-                <Button variant="outline">Cancel</Button>
+                <Button variant="outline" onClick={clearPlayer}>
+                  Cancel
+                </Button>
               </Dialog.ActionTrigger>
-              <Button onClick={onClick}>Create</Button>
+              <Dialog.ActionTrigger asChild>
+                <Button
+                  onClick={() => {
+                    handleCreatePlayer();
+                    clearPlayer();
+                  }}
+                >
+                  Create
+                </Button>
+              </Dialog.ActionTrigger>
             </Dialog.Footer>
             <Dialog.CloseTrigger asChild>
               <CloseButton size="sm" />

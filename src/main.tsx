@@ -5,11 +5,15 @@ import App from "./App.tsx";
 
 /* chakra */
 import { Provider } from "./Components/ui/provider";
+/* context */
+import ContextProvider from "./context/ContextProvider";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Provider>
-      <App />
+      <ContextProvider>
+        <App />
+      </ContextProvider>
     </Provider>
   </StrictMode>
 );

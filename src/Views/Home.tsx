@@ -11,11 +11,7 @@ const Home: React.FC = () => {
       <section className="w-1/6 h-screen p-2 border-stone-600 border-r-1">
         <div className="flex flex-row justify-between ">
           <h2 className="flex items-center">Players</h2>
-          <PlayerCreator
-            onClick={() => {
-              console.log("IconButton clicked");
-            }}
-          />
+          <PlayerCreator />
         </div>
       </section>
       <section className="">
