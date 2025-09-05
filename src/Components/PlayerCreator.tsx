@@ -1,7 +1,15 @@
 import React, { useState } from "react";
-import { Image } from "@chakra-ui/react";
+
 /* chakra */
-import { Button, CloseButton, Dialog, Portal, Input } from "@chakra-ui/react";
+import {
+  Button,
+  CloseButton,
+  Image,
+  Dialog,
+  Portal,
+  Input,
+} from "@chakra-ui/react";
+import { toaster } from "@/components/ui/toaster";
 /* types */
 import type { IPlayerClasses } from "../types";
 /* utils */
@@ -18,6 +26,8 @@ import {
 } from "../utils";
 /* context */
 import { usePlayer } from "../context";
+/* services */
+import { playerService } from "../data/services";
 
 interface PlayerCreatorProps {}
 
@@ -26,9 +36,20 @@ const PlayerCreator: React.FC<PlayerCreatorProps> = () => {
 
   const [playerName, setPlayerName] = useState("");
 
-  const handleCreatePlayer = () => {
-    console.log("player", player);
-    addPlayer({ name: playerName, class: player.class });
+  const handleCreatePlayer = async () => {
+    try {
+      await playerService.postPlayer({
+        name: playerName,
+        class: player.class,
+      });
+      addPlayer({ name: playerName, class: player.class });
+    } catch (error) {
+      toaster.create({
+        title: "Error",
+        description: error instanceof Error ? error.message : String(error),
+        type: "error",
+      });
+    }
   };
 
   const playerClassSelector = ({
