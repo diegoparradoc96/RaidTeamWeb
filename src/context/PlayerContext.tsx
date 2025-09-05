@@ -9,6 +9,7 @@ interface IPlayerContext {
   arrPlayers: IPlayer[];
   selectPlayer: (player: IPlayer) => void;
   addPlayer: (player: IPlayer) => void;
+  addPlayers: (players: IPlayer[]) => void;
   removePlayer: (player: IPlayer) => void;
   clearPlayer: () => void;
 }
@@ -36,6 +37,10 @@ const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     setArrPlayers((prev) => [...prev, newPlayer]);
   };
 
+  const addPlayers = (newPlayers: IPlayer[]) => {
+    setArrPlayers((prev) => [...prev, ...newPlayers]);
+  };
+
   /* debo remover por id no por nombre */
   const removePlayer = (player: IPlayer) => {
     setArrPlayers((prev) => prev.filter((p) => p.name !== player.name));
@@ -52,6 +57,7 @@ const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         selectPlayer,
         arrPlayers,
         addPlayer,
+        addPlayers,
         removePlayer,
         clearPlayer,
       }}

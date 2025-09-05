@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 
 /* components */
-import { PlayerCreator, PlayersList } from "../Components";
+import { PlayerCreator, PlayersList } from "../components";
+import localforage from "localforage";
 
 const Home: React.FC = () => {
-  const [count, setCount] = useState<number>(0);
-
+  useEffect(() => {
+    console.log("Localforage: ", localforage);
+  }, []);
   return (
     <div className="flex flex-row w-full">
       <section className="w-1/6 h-screen border-stone-600 bg-zinc-900 items-center flex flex-col">
