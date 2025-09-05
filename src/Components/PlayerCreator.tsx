@@ -22,7 +22,7 @@ import { usePlayer } from "../context";
 interface PlayerCreatorProps {}
 
 const PlayerCreator: React.FC<PlayerCreatorProps> = () => {
-  const { player, addPlayer, clearPlayer } = usePlayer();
+  const { player, addPlayer, selectPlayer, clearPlayer } = usePlayer();
 
   const [playerName, setPlayerName] = useState("");
 
@@ -49,7 +49,7 @@ const PlayerCreator: React.FC<PlayerCreatorProps> = () => {
               objectFit="cover"
               cursor="pointer"
               onClick={() =>
-                addPlayer({
+                selectPlayer({
                   name: playerName,
                   class: { name: playerClasses.name, spec: specInfo },
                 })
