@@ -4,6 +4,8 @@ import { Toaster } from "@/components/ui/toaster";
 import "./index.css";
 import App from "./App.tsx";
 
+/* Atlasian drag and drop */
+import AppProvider from "@atlaskit/pragmatic-drag-and-drop";
 /* chakra */
 import { Provider } from "./components/ui/provider.tsx";
 /* context */
