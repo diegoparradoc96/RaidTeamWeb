@@ -1,4 +1,5 @@
-import { useEffect } from "react";
+import { useEffect, useState, useRef } from "react";
+import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 
 /* chakra */
 import { Image, Text } from "@chakra-ui/react";
@@ -9,6 +10,60 @@ import { DecisionAlert } from "./DecisionAlert";
 /* services */
 import { playerService } from "../data/services";
 import type { IPlayer } from "@/types/IPlayer";
+
+// Componente para cada jugador individual
+const PlayerItem = ({
+  player,
+  onRemove,
+}: {
+  player: IPlayer;
+  onRemove: (player: IPlayer) => void;
+}) => {
+  const ref = useRef<HTMLLIElement>(null);
+  const [dragging, setDragging] = useState<boolean>(false);
+
+  useEffect(() => {
+    const element = ref.current;
+    if (element) {
+      const cleanup = draggable({
+        element: element,
+        getInitialData: () => ({ player }), // Opcional: datos del jugador para el drag
+        onDragStart: () => {
+          console.log(`Dragging player: ${player.name}`);
+          setDragging(true);
+        },
+        onDrop: () => {
+          console.log(`Dropped player: ${player.name}`);
+          setDragging(false);
+        },
+      });
+
+      return cleanup; // Limpia el event listener cuando se desmonte
+    }
+  }, [player]);
+
+  return (
+    <li
+      ref={ref}
+      className={`flex flex-row items-center justify-between mb-2 cursor-move ${
+        dragging ? "opacity-50" : ""
+      }`}
+    >
+      <div className="flex items-center gap-2">
+        <Image src={player.class.spec.image} alt={player.name} boxSize="30px" />
+        <Text textStyle="sm">
+          {player.name.length > 10
+            ? player.name.substring(0, 10) + ".."
+            : player.name}
+        </Text>
+      </div>
+      <DecisionAlert
+        strDescription={`Are you sure you want to remove ${player.name}?`}
+        funExecute={() => onRemove(player)}
+      />
+    </li>
+  );
+};
 
 const PlayersList = () => {
   const { arrPlayers, removePlayer, addPlayers } = usePlayer();
@@ -26,7 +81,8 @@ const PlayersList = () => {
       console.error("Error fetching player:", error);
     }
   };
-  const handdleRemovePlayer = async (player: IPlayer) => {
+
+  const handleRemovePlayer = async (player: IPlayer) => {
     try {
       const success = await playerService.removePlayer(player.name);
       if (success) {
@@ -39,31 +95,13 @@ const PlayersList = () => {
 
   return (
     <div className="w-full">
-      <ul className="">
+      <ul>
         {arrPlayers.map((player) => (
-          <li
+          <PlayerItem
             key={player.name}
-            className="flex flex-row items-center justify-between mb-2" // Cambié gap-2 por justify-between
-          >
-            <div className="flex items-center gap-2">
-              {" "}
-              {/* Agrupa la imagen y el texto */}
-              <Image
-                src={player.class.spec.image}
-                alt={player.name}
-                boxSize="30px"
-              />
-              <Text textStyle="sm">
-                {player.name.length > 10
-                  ? player.name.substring(0, 10) + ".."
-                  : player.name}
-              </Text>
-            </div>
-            <DecisionAlert
-              strDescription={`Are you sure you want to remove ${player.name}?`}
-              funExecute={() => handdleRemovePlayer(player)}
-            />
-          </li>
+            player={player}
+            onRemove={handleRemovePlayer}
+          />
         ))}
       </ul>
     </div>
