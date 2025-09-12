@@ -23,7 +23,6 @@ const Home: React.FC = () => {
         </div>
       </section>
       <section className="flex items-center justify-center w-5/6 h-screen">
-        <p>Aqui va la raid</p>
         <Raid />
       </section>
     </div>
