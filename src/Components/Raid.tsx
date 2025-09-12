@@ -95,7 +95,13 @@ const RaidSlot = ({
           justifyContent="space-between"
           gap={4}
         >
-          <Image src={player.class.spec.image} alt={player.name} boxSize="40px" />
+          <Image 
+            src={player.class.spec.image} 
+            alt={player.name} 
+            boxSize="40px" 
+            style={{ pointerEvents: 'none' }} 
+            draggable={false}
+          />
           <Text flex="1" textAlign="center">{player.name}</Text>
           <DecisionAlert
             strDescription={`Are you sure you want to remove ${player.name} from the raid?`}
