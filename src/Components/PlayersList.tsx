@@ -50,7 +50,13 @@ const PlayerItem = ({
       }`}
     >
       <div className="flex items-center gap-2">
-        <Image src={player.class.spec.image} alt={player.name} boxSize="30px" />
+        <Image 
+          src={player.class.spec.image} 
+          alt={player.name} 
+          boxSize="30px"
+          style={{ pointerEvents: 'none' }}
+          draggable={false}
+        />
         <Text textStyle="sm">
           {player.name.length > 10
             ? player.name.substring(0, 10) + ".."
