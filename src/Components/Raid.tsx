@@ -1,11 +1,33 @@
 import { useEffect, useRef, useState } from "react";
-import { Box, Text, Image, Input } from "@chakra-ui/react";
+import {
+  Box,
+  Text,
+  Image,
+  Button,
+  createListCollection,
+  Select,
+  Portal,
+} from "@chakra-ui/react";
 import {
   dropTargetForElements,
   draggable,
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import type { IPlayer } from "@/types/IPlayer";
 import { raidService } from "@/data/services";
+
+interface RaidBoxProps {
+  boxId: number;
+  slots: (IPlayer | null)[];
+  onPlayerDrop: (
+    player: IPlayer,
+    targetBoxId: number,
+    targetIndex: number,
+    sourceBoxId?: number,
+    sourceIndex?: number
+  ) => void;
+  onPlayerRemove: (boxId: number, index: number) => void;
+  isPlayerInRaid: (player: IPlayer) => boolean;
+}
 
 const RaidSlot = ({
   player,
@@ -157,20 +179,6 @@ const RaidSlot = ({
   );
 };
 
-interface RaidBoxProps {
-  boxId: number;
-  slots: (IPlayer | null)[];
-  onPlayerDrop: (
-    player: IPlayer,
-    targetBoxId: number,
-    targetIndex: number,
-    sourceBoxId?: number,
-    sourceIndex?: number
-  ) => void;
-  onPlayerRemove: (boxId: number, index: number) => void;
-  isPlayerInRaid: (player: IPlayer) => boolean;
-}
-
 const RaidBox = ({
   boxId,
   slots,
@@ -215,6 +223,29 @@ const Raid = () => {
       .fill(null)
       .map(() => Array(5).fill(null))
   );
+  const [availableRaids, setAvailableRaids] = useState<string[]>([]);
+  const raids = createListCollection({
+    // items: [
+    //   { label: "React.js", value: "react" },
+    //   { label: "Vue.js", value: "vue" },
+    //   { label: "Angular", value: "angular" },
+    //   { label: "Svelte", value: "svelte" },
+    // ],
+    items: [...availableRaids.map((raid) => ({ label: raid, value: raid }))],
+  });
+
+  // Cargar la lista de raids disponibles
+  useEffect(() => {
+    const loadRaidsList = async () => {
+      try {
+        const raids = await raidService.getAllRaids();
+        setAvailableRaids(raids);
+      } catch (error) {
+        console.error("Error loading raids list:", error);
+      }
+    };
+    loadRaidsList();
+  }, []);
 
   // Cargar la raid guardada cuando se monta el componente
   useEffect(() => {
@@ -249,7 +280,6 @@ const Raid = () => {
       box.some((slot) => slot?.name === player.name)
     );
   };
-
   const handlePlayerDrop = (
     player: IPlayer,
     targetBoxId: number,
@@ -286,27 +316,62 @@ const Raid = () => {
 
     setRaidBoxes(newBoxes);
   };
-
   const handleRemovePlayer = (boxId: number, index: number) => {
     const newBoxes = raidBoxes.map((box) => [...box]);
     newBoxes[boxId][index] = null;
     setRaidBoxes(newBoxes);
   };
+  const handleAddNewRaid = () => {
+    const newRaidName = `Raid ${availableRaids.length + 1}`;
+    setRaidName(newRaidName);
+    setRaidBoxes(
+      Array(5)
+        .fill(null)
+        .map(() => Array(5).fill(null))
+    );
+    // Actualizamos la lista de raids
+    setAvailableRaids((prevRaids) => [...prevRaids, newRaidName]);
+  };
 
   return (
     <Box display="flex" flexDirection="column" width="100%" gap={4}>
       <Box px={6}>
-        <Input
-          value={raidName}
-          onChange={(e) => setRaidName(e.target.value)}
-          placeholder="Raid name"
-          size="md"
-          width="300px"
-          variant="outline"
-          bg="whiteAlpha.50"
-          _hover={{ bg: "whiteAlpha.100" }}
-          _focus={{ bg: "whiteAlpha.100", borderColor: "blue.400" }}
-        />
+        <Box display="flex" alignItems="end" gap={2}>
+          <Select.Root collection={raids} size="md" width="320px">
+            <Select.HiddenSelect />
+            <Select.Label>Select a raid</Select.Label>
+
+            <Select.Control>
+              <Select.Trigger>
+                <Select.ValueText placeholder="Select a raid" />
+              </Select.Trigger>
+              <Select.IndicatorGroup>
+                <Select.Indicator />
+              </Select.IndicatorGroup>
+            </Select.Control>
+
+            <Portal>
+              <Select.Positioner>
+                <Select.Content>
+                  {raids.items.map((raid) => (
+                    <Select.Item
+                      item={raid}
+                      key={raid.value}
+                      onClick={() => setRaidName(raid.value)}
+                    >
+                      {raid.label}
+                      <Select.ItemIndicator />
+                    </Select.Item>
+                  ))}
+                </Select.Content>
+              </Select.Positioner>
+            </Portal>
+          </Select.Root>
+
+          <Button colorScheme="blue" size="md" onClick={handleAddNewRaid}>
+            +
+          </Button>
+        </Box>
       </Box>
       <Box
         display="grid"
