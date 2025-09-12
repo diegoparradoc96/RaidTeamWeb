@@ -71,6 +71,30 @@ const PlayerItem = ({
   );
 };
 
+const classOrder = [
+  "Warrior",
+  "Paladin",
+  "Hunter",
+  "Rogue",
+  "Priest",
+  "Shaman",
+  "Mage",
+  "Warlock",
+  "Druid",
+];
+
+const specOrder: { [key: string]: string[] } = {
+  Warrior: ["Arms", "fury", "Prot"],
+  Paladin: ["Holy", "Protection", "Retribution"],
+  Hunter: ["Beast Mastery", "Marksmanship", "Survival"],
+  Rogue: ["Assassination", "Outlaw", "Subtlety"],
+  Priest: ["Discipline", "Holy", "Shadow"],
+  Shaman: ["Elemental", "Enhancement", "Restoration"],
+  Mage: ["Arcane", "Fire", "Frost"],
+  Warlock: ["Affliction", "Demonology", "Destruction"],
+  Druid: ["Balance", "Feral", "Restoration"],
+};
+
 const PlayersList = () => {
   const { arrPlayers, removePlayer, addPlayers } = usePlayer();
 
@@ -99,6 +123,39 @@ const PlayersList = () => {
     }
   };
 
+  const sortPlayers = (players: IPlayer[]) => {
+    return players.sort((a, b) => {
+      // Primero ordenar por clase
+      const classIndexA = classOrder.indexOf(a.class.name);
+      const classIndexB = classOrder.indexOf(b.class.name);
+      if (classIndexA !== classIndexB) return classIndexA - classIndexB;
+
+      // Luego ordenar por especialización dentro de la misma clase
+      const specOrderForClass = specOrder[a.class.name] || [];
+      const specIndexA = specOrderForClass.indexOf(a.class.spec.name);
+      const specIndexB = specOrderForClass.indexOf(b.class.spec.name);
+      if (specIndexA !== specIndexB) return specIndexA - specIndexB;
+
+      // Finalmente ordenar por nombre si todo lo demás es igual
+      return a.name.localeCompare(b.name);
+    });
+  };
+
+  const groupPlayersByClass = (players: IPlayer[]) => {
+    const grouped = new Map<string, IPlayer[]>();
+    
+    classOrder.forEach(className => {
+      const classPlayers = players.filter(p => p.class.name === className);
+      if (classPlayers.length > 0) {
+        grouped.set(className, sortPlayers(classPlayers));
+      }
+    });
+    
+    return grouped;
+  };
+
+  const groupedPlayers = groupPlayersByClass(arrPlayers);
+
   return (
     <div className="w-full">
       <div style={{ 
@@ -107,15 +164,30 @@ const PlayersList = () => {
         scrollbarWidth: "thin",
         paddingRight: "10px"
       }}>
-        <ul>
-          {arrPlayers.map((player) => (
-            <PlayerItem
-              key={player.name}
-              player={player}
-              onRemove={handleRemovePlayer}
-            />
+        <div>
+          {Array.from(groupedPlayers.entries()).map(([className, players]) => (
+            <div key={className}>
+              <Text 
+                color="blue.200" 
+                fontSize="sm" 
+                fontWeight="medium" 
+                mb={2} 
+                mt={3}
+              >
+                {className}
+              </Text>
+              <ul>
+                {players.map((player) => (
+                  <PlayerItem
+                    key={player.name}
+                    player={player}
+                    onRemove={handleRemovePlayer}
+                  />
+                ))}
+              </ul>
+            </div>
           ))}
-        </ul>
+        </div>
       </div>
     </div>
   );
