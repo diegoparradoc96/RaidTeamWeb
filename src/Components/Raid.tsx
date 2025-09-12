@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { Box, Text, Image } from "@chakra-ui/react";
+import { Box, Text, Image, Input } from "@chakra-ui/react";
 import {
   dropTargetForElements,
   draggable,
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import type { IPlayer } from "@/types/IPlayer";
+import { raidService } from "@/data/services";
 
 const RaidSlot = ({
   player,
@@ -96,7 +97,9 @@ const RaidSlot = ({
       ref={ref}
       borderWidth="1px"
       borderStyle="solid"
-      borderColor={isInvalid ? "red.400" : isOver ? "blue.400" : "whiteAlpha.200"}
+      borderColor={
+        isInvalid ? "red.400" : isOver ? "blue.400" : "whiteAlpha.200"
+      }
       borderRadius="md"
       h="44px"
       px={3}
@@ -107,7 +110,7 @@ const RaidSlot = ({
       transition="all 0.2s ease"
       _hover={{
         borderColor: isInvalid ? "red.400" : "blue.400",
-        bg: "whiteAlpha.100"
+        bg: "whiteAlpha.100",
       }}
     >
       {player ? (
@@ -141,7 +144,7 @@ const RaidSlot = ({
             zIndex={1}
             transition="all 0.2s"
             _hover={{
-              color: "red.400"
+              color: "red.400",
             }}
           >
             ✕
@@ -206,12 +209,40 @@ const RaidBox = ({
 };
 
 const Raid = () => {
-  // 6 cajas con 5 slots cada una
+  const [raidName, setRaidName] = useState<string>("default");
   const [raidBoxes, setRaidBoxes] = useState<(IPlayer | null)[][]>(
     Array(5)
       .fill(null)
       .map(() => Array(5).fill(null))
   );
+
+  // Cargar la raid guardada cuando se monta el componente
+  useEffect(() => {
+    const loadRaid = async () => {
+      try {
+        const savedRaid = await raidService.getRaid(raidName);
+        if (savedRaid) {
+          setRaidBoxes(savedRaid);
+        }
+      } catch (error) {
+        console.error("Error loading raid:", error);
+      }
+    };
+    loadRaid();
+  }, [raidName]);
+
+  // Guardar la raid cada vez que cambie
+  useEffect(() => {
+    const saveRaid = async () => {
+      try {
+        await raidService.saveRaid(raidName, raidBoxes);
+        console.log(`Raid "${raidName}" saved successfully`);
+      } catch (error) {
+        console.error("Error saving raid:", error);
+      }
+    };
+    saveRaid();
+  }, [raidBoxes, raidName]);
 
   const isPlayerInRaid = (player: IPlayer) => {
     return raidBoxes.some((box) =>
@@ -263,24 +294,41 @@ const Raid = () => {
   };
 
   return (
-    <Box
-      p={6}
-      display="grid"
-      gridTemplateColumns="repeat(5, minmax(200px, 1fr))"
-      gap={4}
-      width="100%"
-      bg="transparent"
-    >
-      {raidBoxes.map((slots, boxId) => (
-        <RaidBox
-          key={boxId}
-          boxId={boxId}
-          slots={slots}
-          onPlayerDrop={handlePlayerDrop}
-          onPlayerRemove={handleRemovePlayer}
-          isPlayerInRaid={isPlayerInRaid}
+    <Box display="flex" flexDirection="column" width="100%" gap={4}>
+      <Box px={6}>
+        <Input
+          value={raidName}
+          onChange={(e) => setRaidName(e.target.value)}
+          placeholder="Raid name"
+          size="md"
+          width="300px"
+          variant="outline"
+          bg="whiteAlpha.50"
+          _hover={{ bg: "whiteAlpha.100" }}
+          _focus={{ bg: "whiteAlpha.100", borderColor: "blue.400" }}
         />
-      ))}
+      </Box>
+      <Box
+        display="grid"
+        gridTemplateColumns="repeat(5, 1fr)"
+        //flexWrap="wrap"
+        justifyContent="space-between"
+        gap={4}
+        width="100%"
+        bg="transparent"
+        px={6}
+      >
+        {raidBoxes.map((slots, boxId) => (
+          <RaidBox
+            key={boxId}
+            boxId={boxId}
+            slots={slots}
+            onPlayerDrop={handlePlayerDrop}
+            onPlayerRemove={handleRemovePlayer}
+            isPlayerInRaid={isPlayerInRaid}
+          />
+        ))}
+      </Box>
     </Box>
   );
 };
