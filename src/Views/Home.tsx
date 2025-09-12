@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 
 /* components */
-import { PlayerCreator, PlayersList } from "../components";
+import { PlayerCreator, PlayersList, Raid } from "../components";
 import localforage from "localforage";
 
 const Home: React.FC = () => {
@@ -24,6 +24,7 @@ const Home: React.FC = () => {
       </section>
       <section className="flex items-center justify-center w-5/6 h-screen">
         <p>Aqui va la raid</p>
+        <Raid />
       </section>
     </div>
   );
