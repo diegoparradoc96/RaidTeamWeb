@@ -101,15 +101,22 @@ const PlayersList = () => {
 
   return (
     <div className="w-full">
-      <ul>
-        {arrPlayers.map((player) => (
-          <PlayerItem
-            key={player.name}
-            player={player}
-            onRemove={handleRemovePlayer}
-          />
-        ))}
-      </ul>
+      <div style={{ 
+        maxHeight: "600px", 
+        overflowY: "auto", 
+        scrollbarWidth: "thin",
+        paddingRight: "10px"
+      }}>
+        <ul>
+          {arrPlayers.map((player) => (
+            <PlayerItem
+              key={player.name}
+              player={player}
+              onRemove={handleRemovePlayer}
+            />
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };
