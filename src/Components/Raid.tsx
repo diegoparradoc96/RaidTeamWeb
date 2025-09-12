@@ -95,15 +95,20 @@ const RaidSlot = ({
     <Box
       ref={ref}
       borderWidth="1px"
-      borderColor={isInvalid ? "red.500" : isOver ? "blue.500" : "gray.500"}
+      borderStyle="solid"
+      borderColor={isInvalid ? "red.400" : isOver ? "blue.400" : "whiteAlpha.200"}
       borderRadius="md"
-      h="42px"
-      p={1}
+      h="44px"
+      px={3}
       display="flex"
       alignItems="center"
       justifyContent="center"
-      bg={isOver ? "gray.100" : "transparent"}
-      transition="all 0.2s"
+      bg={isOver ? "whiteAlpha.200" : player ? "whiteAlpha.100" : "transparent"}
+      transition="all 0.2s ease"
+      _hover={{
+        borderColor: isInvalid ? "red.400" : "blue.400",
+        bg: "whiteAlpha.100"
+      }}
     >
       {player ? (
         <Box
@@ -125,8 +130,7 @@ const RaidSlot = ({
 
           <Box
             cursor="pointer"
-            color="white"
-            borderRadius="full"
+            color="whiteAlpha.600"
             width="20px"
             height="20px"
             display="flex"
@@ -135,6 +139,10 @@ const RaidSlot = ({
             fontSize="xs"
             onClick={() => onPlayerRemove(boxId, index)}
             zIndex={1}
+            transition="all 0.2s"
+            _hover={{
+              color: "red.400"
+            }}
           >
             ✕
           </Box>
@@ -168,11 +176,19 @@ const RaidBox = ({
   isPlayerInRaid,
 }: RaidBoxProps) => {
   return (
-    <Box p={4} borderWidth="1px" borderRadius="lg" width="100%" borderColor={"gray.300"}>
-      <Text fontSize="lg" mb={4}>
+    <Box
+      p={4}
+      borderWidth="1px"
+      borderRadius="md"
+      width="100%"
+      borderColor="whiteAlpha.200"
+      bg="transparent"
+      transition="all 0.2s ease"
+    >
+      <Text fontSize="md" mb={4} fontWeight="medium" color="blue.200">
         Group {boxId + 1}
       </Text>
-      <Box display="flex" flexDirection="column" gap={4} width="100%">
+      <Box display="flex" flexDirection="column" gap={3} width="100%">
         {slots.map((player, index) => (
           <RaidSlot
             key={index}
@@ -248,11 +264,12 @@ const Raid = () => {
 
   return (
     <Box
-      p={4}
+      p={6}
       display="grid"
-      gridTemplateColumns="repeat(6, minmax(200px, 1fr))"
+      gridTemplateColumns="repeat(5, minmax(200px, 1fr))"
       gap={4}
       width="100%"
+      bg="transparent"
     >
       {raidBoxes.map((slots, boxId) => (
         <RaidBox
