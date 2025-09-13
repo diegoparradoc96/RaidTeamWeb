@@ -30,6 +30,8 @@ interface RaidBoxProps {
   ) => void;
   onPlayerRemove: (boxId: number, index: number) => void;
   isPlayerInRaid: (player: IPlayer) => boolean;
+  onPlayerConfirmation: (playerName: string) => void;
+  isPlayerConfirmed: (playerName: string) => boolean;
 }
 
 const RaidSlot = ({
@@ -39,6 +41,8 @@ const RaidSlot = ({
   onPlayerDrop,
   onPlayerRemove,
   isPlayerInRaid,
+  onPlayerConfirmation,
+  isPlayerConfirmed,
 }: {
   player: IPlayer | null;
   index: number;
@@ -52,11 +56,12 @@ const RaidSlot = ({
   ) => void;
   onPlayerRemove: (boxId: number, index: number) => void;
   isPlayerInRaid: (player: IPlayer) => boolean;
+  onPlayerConfirmation: (playerName: string) => void;
+  isPlayerConfirmed: (playerName: string) => boolean;
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [isOver, setIsOver] = useState(false);
   const [isInvalid, setIsInvalid] = useState(false);
-  const [isConfirmed, setIsConfirmed] = useState(false);
 
   useEffect(() => {
     const element = ref.current;
@@ -136,7 +141,7 @@ const RaidSlot = ({
         isOver
           ? "whiteAlpha.200"
           : player
-          ? isConfirmed
+          ? isPlayerConfirmed(player.name)
             ? "green.800"
             : "whiteAlpha.100"
           : "transparent"
@@ -154,7 +159,9 @@ const RaidSlot = ({
           justifyContent="space-between"
           onDoubleClick={(e) => {
             e.stopPropagation();
-            setIsConfirmed(!isConfirmed);
+            if (player) {
+              onPlayerConfirmation(player.name);
+            }
           }}
           style={{ cursor: "pointer" }}
         >
@@ -201,6 +208,8 @@ const RaidBox = ({
   onPlayerDrop,
   onPlayerRemove,
   isPlayerInRaid,
+  onPlayerConfirmation,
+  isPlayerConfirmed,
 }: RaidBoxProps) => {
   return (
     <Box
@@ -225,6 +234,8 @@ const RaidBox = ({
             onPlayerDrop={onPlayerDrop}
             onPlayerRemove={onPlayerRemove}
             isPlayerInRaid={isPlayerInRaid}
+            onPlayerConfirmation={onPlayerConfirmation}
+            isPlayerConfirmed={isPlayerConfirmed}
           />
         ))}
       </Box>
@@ -239,6 +250,7 @@ const Raid = () => {
       .fill(null)
       .map(() => Array(5).fill(null))
   );
+  const [confirmedPlayers, setConfirmedPlayers] = useState<Set<string>>(new Set());
 
   const [availableRaids, setAvailableRaids] = useState<string[]>([]);
   const raids = createListCollection({
@@ -366,6 +378,22 @@ const Raid = () => {
     // Actualizamos la lista de raids
     setAvailableRaids((prevRaids) => [...prevRaids, newRaidName]);
   };
+
+  const handlePlayerConfirmation = (playerName: string) => {
+    setConfirmedPlayers((prev) => {
+      const newConfirmed = new Set(prev);
+      if (newConfirmed.has(playerName)) {
+        newConfirmed.delete(playerName);
+      } else {
+        newConfirmed.add(playerName);
+      }
+      return newConfirmed;
+    });
+  };
+
+  const isPlayerConfirmed = (playerName: string) => {
+    return confirmedPlayers.has(playerName);
+  };
   const handleEditRaidName = async (newName: string) => {
     // Renombrar la raid en el servicio
     await raidService.renameRaid(raidName, newName);
@@ -463,6 +491,8 @@ const Raid = () => {
             onPlayerDrop={handlePlayerDrop}
             onPlayerRemove={handleRemovePlayer}
             isPlayerInRaid={isPlayerInRaid}
+            onPlayerConfirmation={handlePlayerConfirmation}
+            isPlayerConfirmed={isPlayerConfirmed}
           />
         ))}
       </Box>
