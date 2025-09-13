@@ -51,6 +51,23 @@ class RaidService {
       throw error;
     }
   }
+
+  async saveLastUsedRaid(raidName: string): Promise<void> {
+    try {
+      await localforage.setItem('lastUsedRaid', raidName);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getLastUsedRaid(): Promise<string | null> {
+    try {
+      const lastRaid = await localforage.getItem<string>('lastUsedRaid');
+      return lastRaid;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 const raidService = new RaidService();

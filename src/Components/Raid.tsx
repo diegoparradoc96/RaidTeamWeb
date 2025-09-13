@@ -233,16 +233,35 @@ const RaidBox = ({
 };
 
 const Raid = () => {
-  const [raidName, setRaidName] = useState<string>("default");
+  const [raidName, setRaidName] = useState<string>("");
   const [raidBoxes, setRaidBoxes] = useState<(IPlayer | null)[][]>(
     Array(5)
       .fill(null)
       .map(() => Array(5).fill(null))
   );
+
   const [availableRaids, setAvailableRaids] = useState<string[]>([]);
   const raids = createListCollection({
     items: [...availableRaids.map((raid) => ({ label: raid, value: raid }))],
   });
+
+  // Cargar la última raid usada
+  useEffect(() => {
+    const loadLastUsedRaid = async () => {
+      try {
+        const lastRaid = await raidService.getLastUsedRaid();
+        if (lastRaid) {
+          setRaidName(lastRaid);
+        } else {
+          setRaidName("default");
+        }
+      } catch (error) {
+        console.error("Error loading last used raid:", error);
+        setRaidName("default");
+      }
+    };
+    loadLastUsedRaid();
+  }, []);
 
   // Cargar la lista de raids disponibles
   useEffect(() => {
@@ -261,9 +280,14 @@ const Raid = () => {
   useEffect(() => {
     const loadRaid = async () => {
       try {
-        const savedRaid = await raidService.getRaid(raidName);
-        if (savedRaid) {
-          setRaidBoxes(savedRaid);
+        // Solo cargar si hay un nombre de raid válido
+        if (raidName) {
+          const savedRaid = await raidService.getRaid(raidName);
+          if (savedRaid) {
+            setRaidBoxes(savedRaid);
+          }
+          // Guardar como última raid usada
+          await raidService.saveLastUsedRaid(raidName);
         }
       } catch (error) {
         console.error("Error loading raid:", error);
@@ -342,6 +366,31 @@ const Raid = () => {
     // Actualizamos la lista de raids
     setAvailableRaids((prevRaids) => [...prevRaids, newRaidName]);
   };
+  const handleEditRaidName = async (newName: string) => {
+    // Renombrar la raid en el servicio
+    await raidService.renameRaid(raidName, newName);
+    // Actualizar la lista de raids
+    setAvailableRaids((prevRaids) => {
+      const newRaids = [...prevRaids];
+      const index = newRaids.indexOf(raidName);
+      if (index !== -1) {
+        newRaids[index] = newName;
+      }
+      return newRaids;
+    });
+    // Actualizar el nombre actual
+    setRaidName(newName);
+  };
+  const handleDeleteRaid = async () => {
+    // Eliminar la raid del servicio
+    setAvailableRaids((prevRaids) =>
+      prevRaids.filter((raid) => raid !== raidName)
+    );
+    // Eliminar la raid del servicio
+    raidService.deleteRaid(raidName);
+    // Si hay otras raids disponibles, seleccionar la primera
+    setRaidName(availableRaids[0] || "default");
+  };
 
   return (
     <Box display="flex" flexDirection="column" width="100%" gap={4}>
@@ -353,7 +402,7 @@ const Raid = () => {
 
             <Select.Control>
               <Select.Trigger>
-                <Select.ValueText placeholder="Select a raid" />
+                <Select.ValueText placeholder={raidName} />
               </Select.Trigger>
               <Select.IndicatorGroup>
                 <Select.Indicator />
@@ -388,34 +437,11 @@ const Raid = () => {
           </IconButton>
           <EditNameDialog
             currentName={raidName}
-            onSave={async (newName) => {
-              // Renombrar la raid en el servicio
-              await raidService.renameRaid(raidName, newName);
-              // Actualizar la lista de raids
-              setAvailableRaids((prevRaids) => {
-                const newRaids = [...prevRaids];
-                const index = newRaids.indexOf(raidName);
-                if (index !== -1) {
-                  newRaids[index] = newName;
-                }
-                return newRaids;
-              });
-              // Actualizar el nombre actual
-              setRaidName(newName);
-            }}
+            onSave={async (newName) => handleEditRaidName(newName)}
           />
           <DecisionAlert
             strDescription={`¿Estás seguro de que deseas eliminar la raid "${raidName}"?`}
-            funExecute={() => {
-              // Eliminar la raid actual de la lista
-              setAvailableRaids((prevRaids) =>
-                prevRaids.filter((raid) => raid !== raidName)
-              );
-              // Eliminar la raid del servicio
-              raidService.deleteRaid(raidName);
-              // Si hay otras raids disponibles, seleccionar la primera
-              setRaidName(availableRaids[0] || "default");
-            }}
+            funExecute={() => handleDeleteRaid()}
           />
         </Box>
       </Box>
