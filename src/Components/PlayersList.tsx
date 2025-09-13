@@ -66,6 +66,7 @@ const PlayerItem = ({
       <DecisionAlert
         strDescription={`Are you sure you want to remove ${player.name}?`}
         funExecute={() => onRemove(player)}
+        iconSize="sm"
       />
     </li>
   );

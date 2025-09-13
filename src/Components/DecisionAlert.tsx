@@ -8,22 +8,24 @@ import {
   Portal,
   IconButton,
 } from "@chakra-ui/react";
-import { LuCircleX } from "react-icons/lu";
+import { LuTrash2 } from "react-icons/lu";
 
 interface DecisionAlertProps {
   strDescription: string;
+  iconSize?: "sm" | "md" | "lg";
   funExecute: () => void;
 }
 
 const DecisionAlert: React.FC<DecisionAlertProps> = ({
   funExecute,
   strDescription,
+  iconSize = "md",
 }) => {
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>
-        <IconButton>
-          <LuCircleX color="white" />
+        <IconButton size={iconSize}>
+          <LuTrash2 color="white" />
         </IconButton>
       </Dialog.Trigger>
       <Portal>

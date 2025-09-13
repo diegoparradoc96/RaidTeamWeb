@@ -3,11 +3,13 @@ import {
   Box,
   Text,
   Image,
-  Button,
   createListCollection,
   Select,
   Portal,
+  IconButton,
 } from "@chakra-ui/react";
+import { LuCirclePlus } from "react-icons/lu";
+import { DecisionAlert } from "./DecisionAlert";
 import {
   dropTargetForElements,
   draggable,
@@ -368,9 +370,22 @@ const Raid = () => {
             </Portal>
           </Select.Root>
 
-          <Button colorScheme="blue" size="md" onClick={handleAddNewRaid}>
-            +
-          </Button>
+          <IconButton colorScheme="blue" color="white" size="md" onClick={handleAddNewRaid}>
+            <LuCirclePlus />
+          </IconButton>
+          <DecisionAlert
+            strDescription={`¿Estás seguro de que deseas eliminar la raid "${raidName}"?`}
+            funExecute={() => {
+              // Eliminar la raid actual de la lista
+              setAvailableRaids((prevRaids) => 
+                prevRaids.filter(raid => raid !== raidName)
+              );
+              // Eliminar la raid del servicio
+              raidService.deleteRaid(raidName);
+              // Si hay otras raids disponibles, seleccionar la primera
+              setRaidName(availableRaids[0] || "default");
+            }}
+          />
         </Box>
       </Box>
       <Box
