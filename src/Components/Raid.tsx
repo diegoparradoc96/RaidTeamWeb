@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { LuCirclePlus } from "react-icons/lu";
 import { DecisionAlert } from "./DecisionAlert";
+import { EditNameDialog } from "./EditNameDialog";
 import {
   dropTargetForElements,
   draggable,
@@ -385,6 +386,24 @@ const Raid = () => {
           >
             <LuCirclePlus />
           </IconButton>
+          <EditNameDialog
+            currentName={raidName}
+            onSave={async (newName) => {
+              // Renombrar la raid en el servicio
+              await raidService.renameRaid(raidName, newName);
+              // Actualizar la lista de raids
+              setAvailableRaids((prevRaids) => {
+                const newRaids = [...prevRaids];
+                const index = newRaids.indexOf(raidName);
+                if (index !== -1) {
+                  newRaids[index] = newName;
+                }
+                return newRaids;
+              });
+              // Actualizar el nombre actual
+              setRaidName(newName);
+            }}
+          />
           <DecisionAlert
             strDescription={`¿Estás seguro de que deseas eliminar la raid "${raidName}"?`}
             funExecute={() => {

@@ -37,6 +37,20 @@ class RaidService {
       throw error;
     }
   }
+
+  async renameRaid(oldName: string, newName: string): Promise<boolean> {
+    try {
+      const raid = await this.getRaid(oldName);
+      if (raid) {
+        await this.saveRaid(newName, raid);
+        await this.deleteRaid(oldName);
+        return true;
+      }
+      return false;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 const raidService = new RaidService();
