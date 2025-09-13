@@ -28,6 +28,15 @@ class RaidService {
       throw error;
     }
   }
+
+  async deleteRaid(name: string): Promise<boolean> {
+    try {
+      await localforage.removeItem(`raid_${name}`);
+      return true;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 const raidService = new RaidService();
