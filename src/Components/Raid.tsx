@@ -250,7 +250,6 @@ const Raid = () => {
       .fill(null)
       .map(() => Array(5).fill(null))
   );
-  const [confirmedPlayers, setConfirmedPlayers] = useState<Set<string>>(new Set());
 
   const [availableRaids, setAvailableRaids] = useState<string[]>([]);
   const raids = createListCollection({
@@ -337,6 +336,7 @@ const Raid = () => {
 
     // Si es un movimiento dentro de la raid (ya sea en la misma caja o entre cajas)
     if (sourceBoxId !== undefined && sourceIndex !== undefined) {
+      const movedPlayer = newBoxes[sourceBoxId][sourceIndex];
       // Si el slot destino está ocupado, intercambiamos posiciones
       if (newBoxes[targetBoxId][targetIndex]) {
         const targetPlayer = newBoxes[targetBoxId][targetIndex];
@@ -345,7 +345,11 @@ const Raid = () => {
         // Si el slot destino está vacío, limpiamos el origen
         newBoxes[sourceBoxId][sourceIndex] = null;
       }
-      newBoxes[targetBoxId][targetIndex] = player;
+      // Mantenemos el estado de confirmación al mover el jugador
+      newBoxes[targetBoxId][targetIndex] = {
+        ...player,
+        isConfirmed: movedPlayer?.isConfirmed || false
+      };
     }
     // Si es un jugador nuevo desde fuera de la raid
     else {
@@ -355,8 +359,11 @@ const Raid = () => {
         return;
       }
 
-      // Reemplazamos el jugador en el slot objetivo
-      newBoxes[targetBoxId][targetIndex] = player;
+      // Reemplazamos el jugador en el slot objetivo con estado de confirmación inicial
+      newBoxes[targetBoxId][targetIndex] = {
+        ...player,
+        isConfirmed: false
+      };
       console.log(`${player.name} has been added to group ${targetBoxId + 1}`);
     }
 
@@ -380,19 +387,26 @@ const Raid = () => {
   };
 
   const handlePlayerConfirmation = (playerName: string) => {
-    setConfirmedPlayers((prev) => {
-      const newConfirmed = new Set(prev);
-      if (newConfirmed.has(playerName)) {
-        newConfirmed.delete(playerName);
-      } else {
-        newConfirmed.add(playerName);
+    const newBoxes = raidBoxes.map(box => box.map(player => {
+      if (player && player.name === playerName) {
+        return {
+          ...player,
+          isConfirmed: !player.isConfirmed
+        };
       }
-      return newConfirmed;
-    });
+      return player;
+    }));
+    setRaidBoxes(newBoxes);
   };
 
   const isPlayerConfirmed = (playerName: string) => {
-    return confirmedPlayers.has(playerName);
+    for (const box of raidBoxes) {
+      const player = box.find(p => p?.name === playerName);
+      if (player) {
+        return !!player.isConfirmed;
+      }
+    }
+    return false;
   };
   const handleEditRaidName = async (newName: string) => {
     // Renombrar la raid en el servicio

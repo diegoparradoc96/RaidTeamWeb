@@ -5,4 +5,5 @@ export interface IPlayer {
   //id: string;
   name: string;
   class: IPlayerClass;
+  isConfirmed?: boolean;
 }
