@@ -55,6 +55,7 @@ const RaidSlot = ({
   const ref = useRef<HTMLDivElement>(null);
   const [isOver, setIsOver] = useState(false);
   const [isInvalid, setIsInvalid] = useState(false);
+  const [isConfirmed, setIsConfirmed] = useState(false);
 
   useEffect(() => {
     const element = ref.current;
@@ -130,11 +131,18 @@ const RaidSlot = ({
       display="flex"
       alignItems="center"
       justifyContent="center"
-      bg={isOver ? "whiteAlpha.200" : player ? "whiteAlpha.100" : "transparent"}
+      bg={
+        isOver
+          ? "whiteAlpha.200"
+          : player
+          ? isConfirmed
+            ? "green.800"
+            : "whiteAlpha.100"
+          : "transparent"
+      }
       transition="all 0.2s ease"
       _hover={{
         borderColor: isInvalid ? "red.400" : "blue.400",
-        bg: "whiteAlpha.100",
       }}
     >
       {player ? (
@@ -143,6 +151,11 @@ const RaidSlot = ({
           display="flex"
           alignItems="center"
           justifyContent="space-between"
+          onDoubleClick={(e) => {
+            e.stopPropagation();
+            setIsConfirmed(!isConfirmed);
+          }}
+          style={{ cursor: "pointer" }}
         >
           <Box display="flex" alignItems="center" gap={2}>
             <Image
@@ -227,12 +240,6 @@ const Raid = () => {
   );
   const [availableRaids, setAvailableRaids] = useState<string[]>([]);
   const raids = createListCollection({
-    // items: [
-    //   { label: "React.js", value: "react" },
-    //   { label: "Vue.js", value: "vue" },
-    //   { label: "Angular", value: "angular" },
-    //   { label: "Svelte", value: "svelte" },
-    // ],
     items: [...availableRaids.map((raid) => ({ label: raid, value: raid }))],
   });
 
@@ -370,15 +377,20 @@ const Raid = () => {
             </Portal>
           </Select.Root>
 
-          <IconButton colorScheme="blue" color="white" size="md" onClick={handleAddNewRaid}>
+          <IconButton
+            colorScheme="blue"
+            color="white"
+            size="md"
+            onClick={handleAddNewRaid}
+          >
             <LuCirclePlus />
           </IconButton>
           <DecisionAlert
             strDescription={`¿Estás seguro de que deseas eliminar la raid "${raidName}"?`}
             funExecute={() => {
               // Eliminar la raid actual de la lista
-              setAvailableRaids((prevRaids) => 
-                prevRaids.filter(raid => raid !== raidName)
+              setAvailableRaids((prevRaids) =>
+                prevRaids.filter((raid) => raid !== raidName)
               );
               // Eliminar la raid del servicio
               raidService.deleteRaid(raidName);
