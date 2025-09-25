@@ -9,9 +9,11 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 import { LuTrash2 } from "react-icons/lu";
+import { MdCleaningServices } from "react-icons/md";
 
 interface DecisionAlertProps {
   strDescription: string;
+  icon?: string;
   iconSize?: "sm" | "md" | "lg";
   funExecute: () => void;
 }
@@ -19,13 +21,15 @@ interface DecisionAlertProps {
 const DecisionAlert: React.FC<DecisionAlertProps> = ({
   funExecute,
   strDescription,
+  icon = "trash",
   iconSize = "md",
 }) => {
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>
         <IconButton size={iconSize}>
-          <LuTrash2 color="white" />
+          {icon === "trash" && <LuTrash2 color="white" />}
+          {icon === "clean" && <MdCleaningServices color="white" />}
         </IconButton>
       </Dialog.Trigger>
       <Portal>
