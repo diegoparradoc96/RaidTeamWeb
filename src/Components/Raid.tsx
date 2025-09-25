@@ -434,57 +434,76 @@ const Raid = () => {
     setRaidName(availableRaids[0] || "default");
   };
 
+  const handleUnconfirmAll = () => {
+    const newBoxes = raidBoxes.map(box =>
+      box.map(player =>
+        player ? { ...player, isConfirmed: false } : null
+      )
+    );
+    setRaidBoxes(newBoxes);
+  };
+
   return (
     <Box display="flex" flexDirection="column" width="100%" gap={4}>
       <Box px={6}>
-        <Box display="flex" alignItems="end" gap={2}>
-          <Select.Root collection={raids} size="md" width="320px">
-            <Select.HiddenSelect />
-            <Select.Label>Select a raid</Select.Label>
+        <Box display="flex" alignItems="end" justifyContent="space-between">
+          <Box display="flex" alignItems="end" gap={2}>
+            <Select.Root collection={raids} size="md" width="320px">
+              <Select.HiddenSelect />
+              <Select.Label>Select a raid</Select.Label>
 
-            <Select.Control>
-              <Select.Trigger>
-                <Select.ValueText placeholder={raidName} />
-              </Select.Trigger>
-              <Select.IndicatorGroup>
-                <Select.Indicator />
-              </Select.IndicatorGroup>
-            </Select.Control>
+              <Select.Control>
+                <Select.Trigger>
+                  <Select.ValueText placeholder={raidName} />
+                </Select.Trigger>
+                <Select.IndicatorGroup>
+                  <Select.Indicator />
+                </Select.IndicatorGroup>
+              </Select.Control>
 
-            <Portal>
-              <Select.Positioner>
-                <Select.Content>
-                  {raids.items.map((raid) => (
-                    <Select.Item
-                      item={raid}
-                      key={raid.value}
-                      onClick={() => setRaidName(raid.value)}
-                    >
-                      {raid.label}
-                      <Select.ItemIndicator />
-                    </Select.Item>
-                  ))}
-                </Select.Content>
-              </Select.Positioner>
-            </Portal>
-          </Select.Root>
+              <Portal>
+                <Select.Positioner>
+                  <Select.Content>
+                    {raids.items.map((raid) => (
+                      <Select.Item
+                        item={raid}
+                        key={raid.value}
+                        onClick={() => setRaidName(raid.value)}
+                      >
+                        {raid.label}
+                        <Select.ItemIndicator />
+                      </Select.Item>
+                    ))}
+                  </Select.Content>
+                </Select.Positioner>
+              </Portal>
+            </Select.Root>
 
-          <IconButton
-            colorScheme="blue"
-            color="white"
-            size="md"
-            onClick={handleAddNewRaid}
-          >
-            <LuCirclePlus />
-          </IconButton>
-          <EditNameDialog
-            currentName={raidName}
-            onSave={async (newName) => handleEditRaidName(newName)}
-          />
-          <DecisionAlert
-            strDescription={`¿Estás seguro de que deseas eliminar la raid "${raidName}"?`}
-            funExecute={() => handleDeleteRaid()}
-          />
+            <IconButton
+              colorScheme="blue"
+              color="white"
+              size="md"
+              onClick={handleAddNewRaid}
+            >
+              <LuCirclePlus />
+            </IconButton>
+            <EditNameDialog
+              currentName={raidName}
+              onSave={async (newName) => handleEditRaidName(newName)}
+            />
+            <DecisionAlert
+              strDescription={`¿Estás seguro de que deseas eliminar la raid "${raidName}"?`}
+              funExecute={() => handleDeleteRaid()}
+            />
+          </Box>
+          
+          <Box flex="1" display="flex" justifyContent="flex-end">
+            <DecisionAlert
+              strDescription="¿Estás seguro de que deseas quitar la confirmación de todos los jugadores?"
+              funExecute={handleUnconfirmAll}
+              icon="clean"
+            />
+          </Box>
         </Box>
       </Box>
       <Box
