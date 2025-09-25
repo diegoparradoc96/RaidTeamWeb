@@ -9,7 +9,7 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 import { LuCirclePlus } from "react-icons/lu";
-import { DecisionAlert } from "./DecisionAlert";
+import { DecisionAlert } from "../components"
 import { EditNameDialog } from "./EditNameDialog";
 import {
   dropTargetForElements,
@@ -348,7 +348,7 @@ const Raid = () => {
       // Mantenemos el estado de confirmación al mover el jugador
       newBoxes[targetBoxId][targetIndex] = {
         ...player,
-        isConfirmed: movedPlayer?.isConfirmed || false
+        isConfirmed: movedPlayer?.isConfirmed || false,
       };
     }
     // Si es un jugador nuevo desde fuera de la raid
@@ -362,7 +362,7 @@ const Raid = () => {
       // Reemplazamos el jugador en el slot objetivo con estado de confirmación inicial
       newBoxes[targetBoxId][targetIndex] = {
         ...player,
-        isConfirmed: false
+        isConfirmed: false,
       };
       console.log(`${player.name} has been added to group ${targetBoxId + 1}`);
     }
@@ -387,21 +387,23 @@ const Raid = () => {
   };
 
   const handlePlayerConfirmation = (playerName: string) => {
-    const newBoxes = raidBoxes.map(box => box.map(player => {
-      if (player && player.name === playerName) {
-        return {
-          ...player,
-          isConfirmed: !player.isConfirmed
-        };
-      }
-      return player;
-    }));
+    const newBoxes = raidBoxes.map((box) =>
+      box.map((player) => {
+        if (player && player.name === playerName) {
+          return {
+            ...player,
+            isConfirmed: !player.isConfirmed,
+          };
+        }
+        return player;
+      })
+    );
     setRaidBoxes(newBoxes);
   };
 
   const isPlayerConfirmed = (playerName: string) => {
     for (const box of raidBoxes) {
-      const player = box.find(p => p?.name === playerName);
+      const player = box.find((p) => p?.name === playerName);
       if (player) {
         return !!player.isConfirmed;
       }
@@ -435,10 +437,8 @@ const Raid = () => {
   };
 
   const handleUnconfirmAll = () => {
-    const newBoxes = raidBoxes.map(box =>
-      box.map(player =>
-        player ? { ...player, isConfirmed: false } : null
-      )
+    const newBoxes = raidBoxes.map((box) =>
+      box.map((player) => (player ? { ...player, isConfirmed: false } : null))
     );
     setRaidBoxes(newBoxes);
   };
@@ -496,7 +496,7 @@ const Raid = () => {
               funExecute={() => handleDeleteRaid()}
             />
           </Box>
-          
+
           <Box flex="1" display="flex" justifyContent="flex-end">
             <DecisionAlert
               strDescription="¿Estás seguro de que deseas quitar la confirmación de todos los jugadores?"

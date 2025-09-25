@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 
 /* components */
-import { PlayerCreator, PlayersList, Raid } from "../Components";
+import { PlayerCreator, PlayersList, Raid } from "../components";
 import localforage from "localforage";
 
 const Home: React.FC = () => {
