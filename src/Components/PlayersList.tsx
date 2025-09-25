@@ -6,7 +6,7 @@ import { Image, Text } from "@chakra-ui/react";
 /* context */
 import { usePlayer } from "../context";
 /* components */
-import { DecisionAlert } from "./DecisionAlert";
+import { DecisionAlert } from "../components";
 /* services */
 import { playerService } from "../data/services";
 import type { IPlayer } from "@/types/IPlayer";

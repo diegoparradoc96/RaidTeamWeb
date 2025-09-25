@@ -1,9 +1,9 @@
 import { createRoot } from "react-dom/client";
-import { Toaster } from "@/Components/ui/toaster";
+import { Toaster } from "@/components/ui/toaster.tsx";
 import "./index.css";
 import App from "./App.tsx";
 /* chakra */
-import { Provider } from "./Components/ui/provider.tsx";
+import { Provider } from "./components/ui/provider.tsx";
 /* context */
 import ContextProvider from "./context/ContextProvider";
 
