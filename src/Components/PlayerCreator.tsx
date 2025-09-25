@@ -9,7 +9,7 @@ import {
   Portal,
   Input,
 } from "@chakra-ui/react";
-import { toaster } from "@/Components/ui/toaster";
+import { toaster } from "@/components/ui/toaster";
 /* types */
 import type { IPlayerClasses } from "../types";
 /* utils */
