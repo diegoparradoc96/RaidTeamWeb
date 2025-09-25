@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 /* chakra */
 import {
@@ -7,29 +7,28 @@ import {
   Dialog,
   Portal,
   IconButton,
+  Input,
 } from "@chakra-ui/react";
-import { LuTrash2 } from "react-icons/lu";
-import { MdCleaningServices } from "react-icons/md";
+import { LuPencil } from "react-icons/lu";
 
-interface DecisionAlertProps {
-  strDescription: string;
-  icon?: string;
+interface EditNameDialogProps {
+  currentName: string;
   iconSize?: "sm" | "md" | "lg";
-  funExecute: () => void;
+  onSave: (newName: string) => void;
 }
 
-const DecisionAlert: React.FC<DecisionAlertProps> = ({
-  funExecute,
-  strDescription,
-  icon = "trash",
+const EditNameDialog: React.FC<EditNameDialogProps> = ({
+  currentName,
+  onSave,
   iconSize = "md",
 }) => {
+  const [newName, setNewName] = useState(currentName);
+
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>
         <IconButton size={iconSize}>
-          {icon === "trash" && <LuTrash2 color="white" />}
-          {icon === "clean" && <MdCleaningServices color="white" />}
+          <LuPencil color="white" />
         </IconButton>
       </Dialog.Trigger>
       <Portal>
@@ -37,21 +36,32 @@ const DecisionAlert: React.FC<DecisionAlertProps> = ({
         <Dialog.Positioner>
           <Dialog.Content>
             <Dialog.Header alignSelf="center">
-              <Dialog.Title>Create new player</Dialog.Title>
+              <Dialog.Title>Edit raid name</Dialog.Title>
             </Dialog.Header>
             <Dialog.Body>
-              <div className="flex flex-row">
-                <p className="flex items-center w-2/6 mr-2">{strDescription}</p>
+              <div className="flex flex-col gap-2">
+                <p className="text-sm">Current name: {currentName}</p>
+                <Input
+                  value={newName}
+                  onChange={(e) => setNewName(e.target.value)}
+                  placeholder="Enter new name"
+                />
               </div>
-
-              <div className="h-5"></div>
             </Dialog.Body>
             <Dialog.Footer>
               <Dialog.ActionTrigger asChild>
                 <Button variant="outline">Cancel</Button>
               </Dialog.ActionTrigger>
               <Dialog.ActionTrigger asChild>
-                <Button onClick={() => funExecute()}>Accept</Button>
+                <Button
+                  onClick={() => {
+                    if (newName && newName !== currentName) {
+                      onSave(newName);
+                    }
+                  }}
+                >
+                  Save
+                </Button>
               </Dialog.ActionTrigger>
             </Dialog.Footer>
             <Dialog.CloseTrigger asChild>
@@ -64,4 +74,4 @@ const DecisionAlert: React.FC<DecisionAlertProps> = ({
   );
 };
 
-export { DecisionAlert };
+export { EditNameDialog };
