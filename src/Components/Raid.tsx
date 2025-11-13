@@ -9,7 +9,7 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 import { LuCirclePlus } from "react-icons/lu";
-import { DecisionAlert } from "../components"
+import { DecisionAlert } from "../components";
 import { EditNameDialog } from "./EditNameDialog";
 import {
   dropTargetForElements,
@@ -385,7 +385,6 @@ const Raid = () => {
     // Actualizamos la lista de raids
     setAvailableRaids((prevRaids) => [...prevRaids, newRaidName]);
   };
-
   const handlePlayerConfirmation = (playerName: string) => {
     const newBoxes = raidBoxes.map((box) =>
       box.map((player) => {
@@ -400,7 +399,6 @@ const Raid = () => {
     );
     setRaidBoxes(newBoxes);
   };
-
   const isPlayerConfirmed = (playerName: string) => {
     for (const box of raidBoxes) {
       const player = box.find((p) => p?.name === playerName);
@@ -435,7 +433,6 @@ const Raid = () => {
     // Si hay otras raids disponibles, seleccionar la primera
     setRaidName(availableRaids[0] || "default");
   };
-
   const handleUnconfirmAll = () => {
     const newBoxes = raidBoxes.map((box) =>
       box.map((player) => (player ? { ...player, isConfirmed: false } : null))
@@ -494,6 +491,8 @@ const Raid = () => {
             <DecisionAlert
               strDescription={`¿Estás seguro de que deseas eliminar la raid "${raidName}"?`}
               funExecute={() => handleDeleteRaid()}
+              color="red.500"
+              butonText="Delete"
             />
           </Box>
 

@@ -1,20 +1,22 @@
 /* types */
 import type { IPlayerClasses } from "../types";
 
+import { ClassImages } from './imageImports';
+
 export const warriorClasses: IPlayerClasses = {
   name: "Warrior",
   spec: [
     {
       name: "Arms",
-      image: "./src/assets/Warrior_Arms.PNG",
+      image: ClassImages.Warrior.Arms,
     },
     {
       name: "Prot",
-      image: "./src/assets/Warrior_Prot.PNG",
+      image: ClassImages.Warrior.Prot,
     },
     {
       name: "fury",
-      image: "./src/assets/Warrior_Fury.PNG",
+      image: ClassImages.Warrior.Fury,
     },
   ],
 };
@@ -23,15 +25,15 @@ export const mageClasses: IPlayerClasses = {
   spec: [
     {
       name: "Arcane",
-      image: "./src/assets/Mage_Arcane.PNG",
+      image: ClassImages.Mage.Arcane,
     },
     {
       name: "Fire",
-      image: "./src/assets/Mage_Fire.PNG",
+      image: ClassImages.Mage.Fire,
     },
     {
       name: "Frost",
-      image: "./src/assets/Mage_Frost.PNG",
+      image: ClassImages.Mage.Frost,
     },
   ],
 };
@@ -40,15 +42,15 @@ export const rogueClasses: IPlayerClasses = {
   spec: [
     {
       name: "Assassination",
-      image: "./src/assets/Rogue_Assassination.PNG",
+      image: ClassImages.Rogue.Assassination,
     },
     {
       name: "Outlaw",
-      image: "./src/assets/Rogue_Combat.PNG",
+      image: ClassImages.Rogue.Combat,
     },
     {
       name: "Subtlety",
-      image: "./src/assets/Rogue_Subtlety.PNG",
+      image: ClassImages.Rogue.Subtlety,
     },
   ],
 };
@@ -57,15 +59,15 @@ export const priestClasses: IPlayerClasses = {
   spec: [
     {
       name: "Discipline",
-      image: "./src/assets/Priest_Discipline.PNG",
+      image: ClassImages.Priest.Discipline,
     },
     {
       name: "Holy",
-      image: "./src/assets/Priest_Holy.PNG",
+      image: ClassImages.Priest.Holy,
     },
     {
       name: "Shadow",
-      image: "./src/assets/Priest_Shadow.PNG",
+      image: ClassImages.Priest.Shadow,
     },
   ],
 };
@@ -74,15 +76,15 @@ export const hunterClasses: IPlayerClasses = {
   spec: [
     {
       name: "Beast Mastery",
-      image: "./src/assets/Hunter_BM.PNG",
+      image: ClassImages.Hunter.BeastMastery,
     },
     {
       name: "Marksmanship",
-      image: "./src/assets/Hunter_MM.PNG",
+      image: ClassImages.Hunter.Marksmanship,
     },
     {
       name: "Survival",
-      image: "./src/assets/Hunter_Survival.PNG",
+      image: ClassImages.Hunter.Survival,
     },
   ],
 };
@@ -91,15 +93,15 @@ export const shamanClasses: IPlayerClasses = {
   spec: [
     {
       name: "Elemental",
-      image: "./src/assets/Shaman_Elemental.PNG",
+      image: ClassImages.Shaman.Elemental,
     },
     {
       name: "Enhancement",
-      image: "./src/assets/Shaman_Enha.PNG",
+      image: ClassImages.Shaman.Enhancement,
     },
     {
       name: "Restoration",
-      image: "./src/assets/Shaman_Resto.PNG",
+      image: ClassImages.Shaman.Restoration,
     },
   ],
 };
@@ -108,15 +110,15 @@ export const paladinClasses: IPlayerClasses = {
   spec: [
     {
       name: "Holy",
-      image: "./src/assets/Paladin_Holy.PNG",
+      image: ClassImages.Paladin.Holy,
     },
     {
       name: "Protection",
-      image: "./src/assets/Paladin_Prot.PNG",
+      image: ClassImages.Paladin.Protection,
     },
     {
       name: "Retribution",
-      image: "./src/assets/Paladin_Retri.PNG",
+      image: ClassImages.Paladin.Retribution,
     },
   ],
 };
@@ -125,15 +127,15 @@ export const warlockClasses: IPlayerClasses = {
   spec: [
     {
       name: "Affliction",
-      image: "./src/assets/Warlock_Affliction.PNG",
+      image: ClassImages.Warlock.Affliction,
     },
     {
       name: "Demonology",
-      image: "./src/assets/Warlock_Demonology.PNG",
+      image: ClassImages.Warlock.Demonology,
     },
     {
       name: "Destruction",
-      image: "./src/assets/Warlock_Destruction.PNG",
+      image: ClassImages.Warlock.Destruction,
     },
   ],
 };
@@ -142,15 +144,15 @@ export const druidClasses: IPlayerClasses = {
   spec: [
     {
       name: "Balance",
-      image: "./src/assets/Druid_Balance.PNG",
+      image: ClassImages.Druid.Balance,
     },
     {
       name: "Feral",
-      image: "./src/assets/Druid_Feral.PNG",
+      image: ClassImages.Druid.Feral,
     },
     {
       name: "Restoration",
-      image: "./src/assets/Druid_Resto.PNG",
+      image: ClassImages.Druid.Restoration,
     },
   ],
 };
