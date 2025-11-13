@@ -16,6 +16,8 @@ interface DecisionAlertProps {
   icon?: string;
   iconSize?: "sm" | "md" | "lg";
   funExecute: () => void;
+  color?: string;
+  butonText?: string;
 }
 
 const DecisionAlert: React.FC<DecisionAlertProps> = ({
@@ -23,6 +25,8 @@ const DecisionAlert: React.FC<DecisionAlertProps> = ({
   strDescription,
   icon = "trash",
   iconSize = "md",
+  color = "green.500",
+  butonText = "Accept",
 }) => {
   return (
     <Dialog.Root>
@@ -41,7 +45,7 @@ const DecisionAlert: React.FC<DecisionAlertProps> = ({
             </Dialog.Header>
             <Dialog.Body>
               <div className="flex flex-row">
-                <p className="flex items-center w-2/6 mr-2">{strDescription}</p>
+                <p className="flex items-center w-6/6 mr-2">{strDescription}</p>
               </div>
 
               <div className="h-5"></div>
@@ -51,7 +55,9 @@ const DecisionAlert: React.FC<DecisionAlertProps> = ({
                 <Button variant="outline">Cancel</Button>
               </Dialog.ActionTrigger>
               <Dialog.ActionTrigger asChild>
-                <Button onClick={() => funExecute()}>Accept</Button>
+                <Button color={color} onClick={() => funExecute()}>
+                  {butonText}
+                </Button>
               </Dialog.ActionTrigger>
             </Dialog.Footer>
             <Dialog.CloseTrigger asChild>

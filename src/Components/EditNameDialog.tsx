@@ -54,6 +54,7 @@ const EditNameDialog: React.FC<EditNameDialogProps> = ({
               </Dialog.ActionTrigger>
               <Dialog.ActionTrigger asChild>
                 <Button
+                color={"green.500"}
                   onClick={() => {
                     if (newName && newName !== currentName) {
                       onSave(newName);
