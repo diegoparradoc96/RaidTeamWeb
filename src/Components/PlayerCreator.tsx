@@ -10,6 +10,7 @@ import {
   Input,
 } from "@chakra-ui/react";
 import { toaster } from "@/components/ui/toaster";
+import { ColorModeProvider } from "../components/ui/color-mode";
 /* types */
 import type { IPlayerClasses } from "../types";
 /* utils */
@@ -105,94 +106,97 @@ const PlayerCreator: React.FC<PlayerCreatorProps> = () => {
   };
 
   return (
-    <Dialog.Root>
-      <Dialog.Trigger asChild>
-        <Button variant="outline" size="sm">
-          +
-        </Button>
-      </Dialog.Trigger>
-      <Portal>
-        <Dialog.Backdrop />
-        <Dialog.Positioner>
-          <Dialog.Content>
-            <Dialog.Header alignSelf="center">
-              <Dialog.Title>Create new player</Dialog.Title>
-            </Dialog.Header>
-            <Dialog.Body>
-              <div className="flex flex-row">
-                <p className="flex items-center w-2/6 mr-2">Player name:</p>
-                <Input
-                  placeholder="Enter player name"
-                  onChange={(e) => setPlayerName(e.target.value)}
-                />
-              </div>
+    <ColorModeProvider forcedTheme="dark">
+      <Dialog.Root>
+        <Dialog.Trigger asChild>
+          <Button variant="outline" size="sm">
+            +
+          </Button>
+        </Dialog.Trigger>
+        <Portal>
+          <Dialog.Backdrop />
+          <Dialog.Positioner>
+            <Dialog.Content>
+              <Dialog.Header alignSelf="center">
+                <Dialog.Title>Create new player</Dialog.Title>
+              </Dialog.Header>
+              <Dialog.Body className="dark">
+                <div className="flex flex-row">
+                  <p className="flex items-center w-2/6 mr-2">Player name:</p>
+                  <Input
+                    placeholder="Enter player name"
+                    onChange={(e) => setPlayerName(e.target.value)}
+                  />
+                </div>
 
-              <div className="h-5"></div>
+                <div className="h-5"></div>
 
-              <div className="flex flex-row">
-                <div className="w-2/6">
-                  {playerClassSelector({ playerClasses: warriorClasses })}
+                <div className="flex flex-row">
+                  <div className="w-2/6">
+                    {playerClassSelector({ playerClasses: warriorClasses })}
+                  </div>
+                  <div className="w-2/6">
+                    {playerClassSelector({ playerClasses: paladinClasses })}
+                  </div>
+                  <div className="w-2/6">
+                    {playerClassSelector({ playerClasses: rogueClasses })}
+                  </div>
                 </div>
-                <div className="w-2/6">
-                  {playerClassSelector({ playerClasses: paladinClasses })}
-                </div>
-                <div className="w-2/6">
-                  {playerClassSelector({ playerClasses: rogueClasses })}
-                </div>
-              </div>
 
-              <div className="h-2"></div>
+                <div className="h-2"></div>
 
-              <div className="flex flex-row">
-                <div className="w-2/6">
-                  {playerClassSelector({ playerClasses: hunterClasses })}
+                <div className="flex flex-row">
+                  <div className="w-2/6">
+                    {playerClassSelector({ playerClasses: hunterClasses })}
+                  </div>
+                  <div className="w-2/6">
+                    {playerClassSelector({ playerClasses: mageClasses })}
+                  </div>
+                  <div className="w-2/6">
+                    {playerClassSelector({ playerClasses: warlockClasses })}
+                  </div>
                 </div>
-                <div className="w-2/6">
-                  {playerClassSelector({ playerClasses: mageClasses })}
-                </div>
-                <div className="w-2/6">
-                  {playerClassSelector({ playerClasses: warlockClasses })}
-                </div>
-              </div>
 
-              <div className="h-2"></div>
+                <div className="h-2"></div>
 
-              <div className="flex flex-row">
-                <div className="w-2/6">
-                  {playerClassSelector({ playerClasses: shamanClasses })}
+                <div className="flex flex-row">
+                  <div className="w-2/6">
+                    {playerClassSelector({ playerClasses: shamanClasses })}
+                  </div>
+                  <div className="w-2/6">
+                    {playerClassSelector({ playerClasses: priestClasses })}
+                  </div>
+                  <div className="w-2/6">
+                    {playerClassSelector({ playerClasses: druidClasses })}
+                  </div>
                 </div>
-                <div className="w-2/6">
-                  {playerClassSelector({ playerClasses: priestClasses })}
-                </div>
-                <div className="w-2/6">
-                  {playerClassSelector({ playerClasses: druidClasses })}
-                </div>
-              </div>
-            </Dialog.Body>
-            <Dialog.Footer>
-              <Dialog.ActionTrigger asChild>
-                <Button variant="outline" onClick={clearPlayer}>
-                  Cancel
-                </Button>
-              </Dialog.ActionTrigger>
-              <Dialog.ActionTrigger asChild>
-                <Button
-                  onClick={() => {
-                    handleCreatePlayer();
-                    clearPlayer();
-                  }}
-                >
-                  Create
-                </Button>
-              </Dialog.ActionTrigger>
-            </Dialog.Footer>
-            <Dialog.CloseTrigger asChild>
-              <CloseButton size="sm" />
-            </Dialog.CloseTrigger>
-          </Dialog.Content>
-        </Dialog.Positioner>
-      </Portal>
-    </Dialog.Root>
+              </Dialog.Body>
+              <Dialog.Footer>
+                <Dialog.ActionTrigger asChild>
+                  <Button variant="outline" onClick={clearPlayer}>
+                    Cancel
+                  </Button>
+                </Dialog.ActionTrigger>
+                <Dialog.ActionTrigger asChild>
+                  <Button
+                    color={"green.500"}
+                    onClick={() => {
+                      handleCreatePlayer();
+                      clearPlayer();
+                    }}
+                  >
+                    Create
+                  </Button>
+                </Dialog.ActionTrigger>
+              </Dialog.Footer>
+              <Dialog.CloseTrigger asChild>
+                <CloseButton size="sm" />
+              </Dialog.CloseTrigger>
+            </Dialog.Content>
+          </Dialog.Positioner>
+        </Portal>
+      </Dialog.Root>
+    </ColorModeProvider>
   );
 };
 
