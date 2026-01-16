@@ -156,3 +156,20 @@ export const druidClasses: IPlayerClasses = {
     },
   ],
 };
+export const deathKnightClasses: IPlayerClasses = {
+  name: "DeathKnight",
+  spec: [
+    {
+      name: "Blood",
+      image: ClassImages.DeathKnight.Blood,
+    },
+    {
+      name: "Frost",
+      image: ClassImages.DeathKnight.Frost,
+    },
+    {
+      name: "Unholy",
+      image: ClassImages.DeathKnight.Unholy,
+    },
+  ],
+};
