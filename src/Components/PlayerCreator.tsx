@@ -24,6 +24,7 @@ import {
   warlockClasses,
   druidClasses,
   hunterClasses,
+  deathKnightClasses,
 } from "../utils";
 /* context */
 import { usePlayer } from "../context";
@@ -168,6 +169,14 @@ const PlayerCreator: React.FC<PlayerCreatorProps> = () => {
                   </div>
                   <div className="w-2/6">
                     {playerClassSelector({ playerClasses: druidClasses })}
+                  </div>
+                </div>
+
+                <div className="h-2"></div>
+
+                <div className="flex flex-row">
+                  <div className="w-2/6">
+                    {playerClassSelector({ playerClasses: deathKnightClasses })}
                   </div>
                 </div>
               </Dialog.Body>

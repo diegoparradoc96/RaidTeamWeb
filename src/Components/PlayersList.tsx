@@ -50,11 +50,11 @@ const PlayerItem = ({
       }`}
     >
       <div className="flex items-center gap-2">
-        <Image 
-          src={player.class.spec.image} 
-          alt={player.name} 
+        <Image
+          src={player.class.spec.image}
+          alt={player.name}
           boxSize="30px"
-          style={{ pointerEvents: 'none' }}
+          style={{ pointerEvents: "none" }}
           draggable={false}
         />
         <Text textStyle="sm">
@@ -82,6 +82,7 @@ const classOrder = [
   "Mage",
   "Warlock",
   "Druid",
+  "DeathKnight",
 ];
 
 const specOrder: { [key: string]: string[] } = {
@@ -94,10 +95,13 @@ const specOrder: { [key: string]: string[] } = {
   Mage: ["Arcane", "Fire", "Frost"],
   Warlock: ["Affliction", "Demonology", "Destruction"],
   Druid: ["Balance", "Feral", "Restoration"],
+  DeathKnight: ["Blood", "Frost", "Unholy"],
 };
 
 const PlayersList = () => {
   const { arrPlayers, removePlayer, addPlayers } = usePlayer();
+
+  console.log("Rendering PlayersList with players:", arrPlayers);
 
   useEffect(() => {
     getPlayers();
@@ -106,7 +110,6 @@ const PlayersList = () => {
   const getPlayers = async () => {
     try {
       const players = await playerService.getPlayers();
-      console.log("Fetched player:", players);
       addPlayers(players);
     } catch (error) {
       console.error("Error fetching player:", error);
@@ -144,14 +147,14 @@ const PlayersList = () => {
 
   const groupPlayersByClass = (players: IPlayer[]) => {
     const grouped = new Map<string, IPlayer[]>();
-    
-    classOrder.forEach(className => {
-      const classPlayers = players.filter(p => p.class.name === className);
+
+    classOrder.forEach((className) => {
+      const classPlayers = players.filter((p) => p.class.name === className);
       if (classPlayers.length > 0) {
         grouped.set(className, sortPlayers(classPlayers));
       }
     });
-    
+
     return grouped;
   };
 
@@ -159,20 +162,22 @@ const PlayersList = () => {
 
   return (
     <div className="w-full">
-      <div style={{ 
-        maxHeight: "600px", 
-        overflowY: "auto", 
-        scrollbarWidth: "thin",
-        paddingRight: "10px"
-      }}>
+      <div
+        style={{
+          maxHeight: "600px",
+          overflowY: "auto",
+          scrollbarWidth: "thin",
+          paddingRight: "10px",
+        }}
+      >
         <div>
           {Array.from(groupedPlayers.entries()).map(([className, players]) => (
             <div key={className}>
-              <Text 
-                color="blue.200" 
-                fontSize="sm" 
-                fontWeight="medium" 
-                mb={2} 
+              <Text
+                color="blue.200"
+                fontSize="sm"
+                fontWeight="medium"
+                mb={2}
                 mt={3}
               >
                 {className}
